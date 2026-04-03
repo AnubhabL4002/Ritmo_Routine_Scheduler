@@ -1,0 +1,800 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritmo — Your Daily Rhythm</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/apple-touch-icon.png' %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/favicon-32x32.png' %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/favicon-16x16.png' %}">
+<link rel="manifest" href="{% static 'icon/site.webmanifest' %}">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --coral:#f08080;--coral-d:#e06060;--coral-l:rgba(240,128,128,0.12);--coral-b:rgba(240,128,128,0.22);
+  --coral-2:#ff9090;--coral-3:#e87878;--coral-4:#ffa0a0;--coral-5:#d06868;--coral-6:#ffb5b5;
+  --bg:#FBF4EF;--bg2:#EDE4DB;--bg3:#E2D6CB;
+  --surf:#FFFFFF;--surf2:#F7EFE8;--brd:rgba(240,128,128,0.14);--brd2:rgba(240,128,128,0.26);
+  --tx:#241610;--tx2:#8B4E3A;--tx3:#B87060;--sh:rgba(240,128,128,0.10);
+}
+.dark{
+  --coral:#f08080;--coral-d:#e06060;--coral-l:rgba(240,128,128,0.13);--coral-b:rgba(240,128,128,0.24);
+  --coral-2:#ff9090;--coral-3:#e87878;--coral-4:#ffa0a0;--coral-5:#d06868;--coral-6:#ffb5b5;
+  --bg:#120D0A;--bg2:#1C1410;--bg3:#261A14;
+  --surf:#1E1510;--surf2:#261A14;--brd:rgba(240,128,128,0.12);--brd2:rgba(240,128,128,0.22);
+  --tx:#F5EAE4;--tx2:#C09070;--tx3:#7A5040;--sh:rgba(0,0,0,0.4);
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);transition:background .4s,color .4s;overflow-x:hidden}
+button{font-family:'DM Sans',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:4px}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.6}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes fadeUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes calIn{from{transform:scale(0.82);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes chipIn{from{transform:scale(0.5) rotate(-4deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes slideL{from{transform:translateX(-16px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes celebIn{from{transform:translate(-50%,-50%) scale(0.3) rotate(-6deg);opacity:0}to{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(14deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
+@keyframes orb1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(70px,-50px) scale(1.12)}66%{transform:translate(-45px,35px) scale(0.88)}}
+@keyframes orb2{0%,100%{transform:translate(0,0)}33%{transform:translate(-55px,55px)}66%{transform:translate(45px,-35px)}}
+@keyframes orb3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,40px)}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--brd);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;backdrop-filter:blur(20px)}
+.logo{font-family:'Instrument Serif',serif;font-size:22px;color:var(--coral);display:flex;align-items:center;gap:9px;letter-spacing:-.3px;text-decoration:none}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:pulse 2.4s ease-in-out infinite;flex-shrink:0}
+.topbar-r{display:flex;gap:10px;align-items:center}
+.ibtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--brd2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:16px;transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+.ibtn:hover{background:var(--bg2);color:var(--coral);transform:scale(1.08)}
+.add-btn{display:flex;align-items:center;gap:7px;padding:0 18px;height:36px;border-radius:10px;border:none;background:var(--coral);color:#fff;font-size:13px;font-weight:500;cursor:pointer;box-shadow:0 2px 12px var(--coral-l);transition:all .25s cubic-bezier(.34,1.56,.64,1)}
+.add-btn:hover{background:var(--coral-d);transform:translateY(-1px);box-shadow:0 6px 20px var(--coral-b)}
+.pill-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--coral);background:var(--coral-l);color:var(--coral);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.user-badge{font-size:12px;color:var(--tx3);padding:4px 10px;border-radius:20px;border:1px solid var(--brd);display:flex;align-items:center;gap:5px}
+.logout-btn{font-size:12px;color:var(--tx3);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .14s}
+.logout-btn:hover{color:var(--coral);background:var(--coral-l)}
+/* Hero */
+.hero{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center}
+.hero-logo-wrap{animation:float 6s ease-in-out infinite;margin-bottom:40px}
+.hero-logo{width:120px;height:120px;border-radius:30px;background:linear-gradient(135deg,var(--coral-l),transparent);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 24px 56px var(--sh)}
+.hero-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent);border-radius:30px}
+.hero-r{font-family:'Instrument Serif',serif;font-size:54px;color:var(--coral);position:relative;z-index:1}
+.hero-h1{font-family:'Instrument Serif',serif;font-size:clamp(40px,8vw,78px);line-height:1.05;letter-spacing:-1px;margin-bottom:18px}
+.hero-h1 em{color:var(--coral);font-style:italic}
+.hero-sub{font-size:17px;color:var(--tx2);line-height:1.7;margin-bottom:40px}
+.quote-card{background:var(--coral-l);border:1px solid var(--brd);border-left:3px solid var(--coral);border-radius:16px;padding:20px 26px;margin-bottom:48px;text-align:left;max-width:580px;width:100%}
+.quote-mark{font-size:36px;color:var(--coral);opacity:.45;line-height:1;margin-bottom:6px}
+.quote-text {
+  font-family: 'Spectral', serif;
+  font-size: 18px;
+  line-height: 1.6;
+  font-style: italic;
+  letter-spacing: 0.2px;
+}
+.quote-author{font-size:12px;font-weight:500;color:var(--tx3);letter-spacing:.5px}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:80px}
+.hero-btn-p{padding:16px 38px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 8px 28px var(--coral-b);transition:all .3s cubic-bezier(.34,1.56,.64,1);text-decoration:none;display:inline-flex;align-items:center}
+.hero-btn-p:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 40px var(--coral-b)}
+.hero-btn-s{padding:16px 38px;border-radius:50px;border:1.5px solid var(--coral);background:transparent;color:var(--coral);font-size:15px;font-weight:500;cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);text-decoration:none;display:inline-flex;align-items:center}
+.hero-btn-s:hover{background:var(--coral-l);transform:translateY(-2px)}
+.stat-strip{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.stat-card{background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:12px 22px;display:flex;align-items:center;gap:12px;animation:fadeUp .6s cubic-bezier(.34,1.56,.64,1) both}
+/* Calendar */
+.cal-page{max-width:960px;margin:0 auto;padding:40px 24px}
+.month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;animation:fadeUp .5s cubic-bezier(.34,1.56,.64,1) both}
+.month-title{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,52px);color:var(--tx);letter-spacing:-.5px;line-height:1;text-align:center}
+.month-title em{color:var(--coral);font-style:italic}
+.day-headers{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px}
+.dh{text-align:center;font-size:11px;font-weight:500;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;padding:8px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal-cell{aspect-ratio:1/1.1;border-radius:16px;border:1px solid var(--brd);padding:10px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;animation:calIn .4s cubic-bezier(.34,1.56,.64,1) both;background:var(--surf);text-decoration:none;color:inherit}
+.cal-cell:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 28px var(--sh);border-color:var(--coral-b)}
+.cal-cell.other{background:transparent;cursor:default;opacity:.5;pointer-events:none}
+.cal-cell.today{background:var(--coral-l);border-color:rgba(240,128,128,.5)}
+.cal-cell.today::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--coral-d));border-radius:16px 16px 0 0}
+.day-num{font-size:clamp(13px,2vw,18px);color:var(--tx)}
+.cal-cell.today .day-num{color:var(--coral);font-weight:600}
+.today-tag{font-size:9px;font-weight:600;color:var(--coral);background:var(--coral-l);padding:2px 6px;border-radius:8px;letter-spacing:.5px;text-transform:uppercase;line-height:1.4}
+.prog-mini{height:3px;border-radius:2px;background:var(--bg3);overflow:hidden;margin-bottom:3px}
+.prog-fill-mini{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--coral),var(--coral-d));transition:width .5s}
+/* Day view */
+.shell{display:grid;grid-template-columns:272px 1fr;grid-template-rows:64px 1fr;height:100vh}
+.sidebar{background:var(--surf);border-right:1px solid var(--brd);overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:5px}
+.s-label{font-size:10px;font-weight:500;letter-spacing:1.3px;text-transform:uppercase;color:var(--tx3);padding:8px 8px 4px;display:flex;align-items:center;justify-content:space-between}
+.count-pill{font-size:11px;color:var(--coral);background:var(--coral-l);padding:1px 8px;border-radius:10px;font-weight:600}
+.tc{background:var(--surf2);border:1px solid var(--brd);border-radius:11px;padding:8px 10px;cursor:grab;transition:all .22s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;user-select:none;animation:slideL .3s cubic-bezier(.34,1.56,.64,1) both}
+.tc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--tc-clr,var(--coral))}
+.tc:hover{transform:translateX(5px) translateY(-1px);box-shadow:0 6px 20px var(--sh)}
+.tc-name{font-size:15px;font-weight:500;color:var(--tx);margin-bottom:6px;line-height:1.35}
+.tc-row{display:flex;align-items:center;justify-content:space-between}
+.tc-tag{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;padding:4px 12px;border-radius:20px}
+.ta-del{width:24px;height:24px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--tx3);transition:all .14s}
+.ta-del:hover{background:#ffe0e0;color:#b33}
+.main{overflow:auto;padding:24px 28px}
+.cal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;animation:fadeUp .5s cubic-bezier(.34,1.56,.64,1) both}
+.cal-title{font-family:'Instrument Serif',serif;font-size:28px;letter-spacing:-.4px;line-height:1.1;color:var(--tx)}
+.cal-title em{color:var(--coral);font-style:italic}
+.progress-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:11px 16px;background:var(--surf);border-radius:12px;border:1px solid var(--brd);animation:fadeUp .5s cubic-bezier(.34,1.56,.64,1) .05s both}
+.pt{flex:1;height:6px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.pf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--coral),var(--coral-d));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.cgrid{background:var(--surf);border-radius:16px;border:1px solid var(--brd);overflow:hidden;box-shadow:0 4px 28px var(--sh);animation:fadeUp .5s cubic-bezier(.34,1.56,.64,1) .1s both}
+.grid-row{display:grid;grid-template-columns:80px 1fr;border-bottom:1px solid var(--brd)}
+.grid-row:last-child{border-bottom:none}
+.grid-hdr{display:grid;grid-template-columns:80px 1fr;border-bottom:1px solid var(--brd)}
+.thdr{height:44px;border-right:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.9px}
+.shdr{height:44px;display:flex;align-items:center;padding:0 14px;font-size:12px;font-weight:500;color:var(--tx3);gap:8px}
+.tslot{border-right:1px solid var(--brd);min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:8px;gap:3px;cursor:pointer;transition:background .14s}
+.tslot:hover{background:var(--bg2)}
+.tlabel{font-size:11px;color:var(--tx3);font-weight:500;text-align:center;line-height:1.3;user-select:none}
+.t-inp{width:62px;font-size:10px;color:var(--tx);background:var(--surf2);border:1px solid var(--coral);border-radius:6px;padding:2px 4px;text-align:center;outline:none;font-family:'DM Sans',sans-serif}
+.dz{min-height:72px;padding:6px 10px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;transition:background .18s,outline .1s}
+.dz.over{background:rgba(240,128,128,.07);outline:1px dashed var(--coral)}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:18px 14px;border-radius:10px;font-size:15px;font-weight:500;cursor:grab;border:1px solid transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1);user-select:none;max-width:none;width:fit-content;animation:chipIn .28s cubic-bezier(.34,1.56,.64,1) both;position:relative}
+.chip:hover{transform:translateY(-2px);box-shadow:0 5px 14px var(--sh)}
+.chip.done{opacity:.52}.chip.done .clbl{text-decoration:line-through}
+.cdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.clbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.cchk{width:20px;height:20px;border-radius:5px;border:1.5px solid currentColor;background:transparent;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15px;line-height:1}
+.crm{width:18px;height:18px;border-radius:5px;border:none;background:rgba(0,0,0,.12);cursor:pointer;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:inherit;opacity:.7}
+.crm:hover{opacity:1}
+.add-slot-btn{margin-top:10px;width:100%;padding:10px;border-radius:12px;border:1px dashed var(--brd2);background:transparent;color:var(--tx3);font-size:12px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.add-slot-btn:hover{border-color:var(--coral);color:var(--coral);background:var(--coral-l)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);backdrop-filter:blur(12px);z-index:900;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s}
+.modal{background:var(--surf);border-radius:22px;padding:28px;width:390px;border:1px solid var(--brd2);box-shadow:0 32px 64px rgba(0,0,0,.5);animation:fadeUp .3s cubic-bezier(.34,1.56,.64,1)}
+.m-title{font-family:'Instrument Serif',serif;font-size:22px;margin-bottom:20px;color:var(--tx)}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field label{font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.4px;text-transform:uppercase}
+.field input{height:42px;padding:0 14px;border-radius:10px;border:1px solid var(--brd2);background:var(--bg2);color:var(--tx);font-size:14px;outline:none;transition:border .18s,box-shadow .18s;font-family:'DM Sans',sans-serif}
+.field input:focus{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-l)}
+.tag-grid{display:flex;flex-wrap:wrap;gap:7px}
+.tag-opt{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all .2s cubic-bezier(.34,1.56,.64,1);user-select:none}
+.tag-opt.sel{transform:scale(1.05)}
+.m-actions{display:flex;gap:8px;margin-top:20px}
+.btn-p{flex:1;height:42px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 14px var(--coral-b)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 22px var(--coral-b)}
+.btn-c{height:42px;padding:0 20px;border-radius:10px;border:1px solid var(--brd2);background:transparent;color:var(--tx2);font-size:14px;cursor:pointer;transition:all .18s}
+.btn-c:hover{background:var(--bg2)}
+.cvs{position:fixed;inset:0;pointer-events:none;z-index:9999;display:none}
+.cel-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surf);border:1px solid var(--brd2);border-radius:24px;padding:32px 48px;text-align:center;z-index:10000;box-shadow:0 40px 80px rgba(0,0,0,.5);animation:celebIn .45s cubic-bezier(.34,1.56,.64,1)}
+.cel-em{font-size:52px;display:block;margin-bottom:14px;animation:wiggle .6s ease-in-out .1s both}
+.cel-t{font-family:'Instrument Serif',serif;font-size:26px;color:var(--tx);margin-bottom:6px}
+.cel-s{font-size:14px;color:var(--tx2);margin-bottom:22px}
+.empty-note{padding:22px 8px;text-align:center;color:var(--tx3);font-size:12.5px;line-height:1.7}
+.del-slot{width:40px;height:24px;border-radius:6px;border:none;background:transparent;color:#cc4444;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0}
+.del-slot:hover{background:#ffe0e0}
+.nav-yr{font-size:15px;color:var(--tx2);text-align:center;margin-top:4px}
+
+.profile-wrap{position:relative;display:flex;align-items:center}
+.profile-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--brd2);background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+.profile-btn:hover{transform:scale(1.08);box-shadow:0 4px 14px var(--coral-b)}
+.profile-drop{position:absolute;top:calc(100% + 10px);right:0;background:var(--surf);border:1px solid var(--brd2);border-radius:14px;padding:10px;min-width:160px;box-shadow:0 16px 40px var(--sh);display:none;z-index:500;animation:fadeUp .2s cubic-bezier(.34,1.56,.64,1)}
+.profile-drop.open{display:block}
+.profile-name{font-size:14px;font-weight:500;color:var(--tx);padding:6px 10px 10px;border-bottom:1px solid var(--brd);margin-bottom:6px;word-break:break-all}
+.profile-logout{display:block;padding:8px 10px;border-radius:8px;font-size:15px;color:var(--coral-3);text-decoration:none;transition:background .14s;font-weight:500}
+.profile-logout:hover{background:var(--coral-l);color:var(--coral)}
+
+</style>
+</head>
+<body class="{{ theme }}">
+<canvas id="confetti-cvs" class="cvs"></canvas>
+
+<script>
+// ── Constants ────────────────────────────────────────────────────────
+const TAGS=[
+  {id:'urgent',label:'🔥 Urgent',  color:'#E8564A',bg:'#FDECEA',dbg:'rgba(232,86,74,.15)'},
+  {id:'focus', label:'💎 Focus',   color:'#7060CC',bg:'#EDEAF8',dbg:'rgba(112,96,204,.15)'},
+  {id:'health',label:'🌿 Health',  color:'#3A9E6A',bg:'#E0F2EA',dbg:'rgba(58,158,106,.15)'},
+  {id:'create',label:'✦ Creative',color:'#D08830',bg:'#FDF3DC',dbg:'rgba(208,136,48,.15)'},
+  {id:'social',label:'💬 Social',  color:'#C060A0',bg:'#F8E4F4',dbg:'rgba(192,96,160,.15)'},
+  {id:'chill', label:'🌙 Chill',   color:'#4890C8',bg:'#E0EEFC',dbg:'rgba(72,144,200,.15)'},
+];
+const DEFAULT_TIMES=['5:00 AM','6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM','9:00 PM','10:00 PM'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const QUOTES=[
+  {text:'The secret of getting ahead is getting started.',author:'Mark Twain'},
+  {text:'Small steps every day lead to big changes over time.',author:'Anonymous'},
+  {text:'Your daily routine is the architecture of your life.',author:'Anonymous'},
+  {text:'Discipline is choosing between what you want now and what you want most.',author:'Augusta F. Kantra'},
+  {text:'We are what we repeatedly do. Excellence is not an act, but a habit.',author:'Aristotle'},
+  {text:'The morning is wiser than the evening.',author:'Russian Proverb'},
+  {text:'Begin anywhere. No one ever built anything by thinking about it.',author:'John Cage'},
+  {text:'Each day is a little life: every waking and rising a little birth.',author:'Schopenhauer'},
+];
+
+// ── State from Django ────────────────────────────────────────────────
+const INITIAL_PAGE = '{{ page }}';
+const INITIAL_DAY_KEY = '{{ day_key|default:"" }}';
+const USERNAME = '{{ username }}';
+const CSRF_TOKEN = '{{ csrf_token }}';
+
+let isDark = document.body.classList.contains('dark');
+let globalTasks = [];
+let dayData = {};   // key -> {times, sched}
+let dragId = null, dragFrom = null;
+let editMode = false;
+let tagSel = 'focus';
+let celFired = {};
+let viewYear = new Date().getFullYear();
+let viewMonth = new Date().getMonth();
+let activeDayKey = INITIAL_DAY_KEY || '';
+
+const today = new Date();
+const todayKey = fmtKey(today.getFullYear(), today.getMonth()+1, today.getDate());
+const quoteIdx = Math.floor(Math.random() * QUOTES.length);
+
+function fmtKey(y,m,d){return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+
+// ── API helpers ───────────────────────────────────────────────────────
+async function apiFetch(url, method='GET', body=null){
+  const opts = {method, headers:{'Content-Type':'application/json','X-CSRFToken':CSRF_TOKEN}};
+  if(body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+async function loadTasks(){
+  const d = await apiFetch('/api/tasks/');
+  globalTasks = d.tasks || [];
+}
+
+async function saveTasks(){
+  // bulk save all tasks
+  for(const t of globalTasks){
+    await apiFetch('/api/tasks/', 'POST', {id:t.id, name:t.name, tag_id:t.tag.id});
+  }
+}
+
+async function loadDayData(key){
+  if(dayData[key]) return;
+  const d = await apiFetch(`/api/day/${key}/`);
+  dayData[key] = {times: d.times || [...DEFAULT_TIMES], sched: d.sched || {}};
+  // ensure sched indices exist
+  dayData[key].times.forEach((_,i)=>{if(!dayData[key].sched[i])dayData[key].sched[i]=[];});
+}
+
+async function saveDayData(key){
+  const dd = dayData[key];
+  if(!dd) return;
+  await apiFetch(`/api/day/${key}/`, 'POST', {times: dd.times, sched: dd.sched});
+}
+
+// ── Theme ─────────────────────────────────────────────────────────────
+async function setTheme(){
+  isDark = !isDark;
+  document.body.className = isDark ? 'dark' : '';
+  await apiFetch('/api/theme/', 'POST', {theme: isDark?'dark':'light'});
+  render();
+}
+
+// ── Routing ──────────────────────────────────────────────────────────
+let currentPage = INITIAL_PAGE || 'home';
+
+function navigate(p, key){
+  currentPage = p;
+  if(key) activeDayKey = key;
+  editMode = false;
+  // Update URL without reload
+  if(p==='home') history.pushState({p}, '', '/');
+  else if(p==='calendar') history.pushState({p}, '', '/calendar/');
+  else if(p==='day') history.pushState({p,key}, '', `/day/${key}/`);
+  render();
+}
+
+window.addEventListener('popstate', e=>{
+  if(e.state){
+    currentPage = e.state.p;
+    if(e.state.key) activeDayKey = e.state.key;
+    render();
+  }
+});
+
+// ── Render ────────────────────────────────────────────────────────────
+async function render(){
+  const app = document.getElementById('app');
+  if(!app) return;
+  if(currentPage==='home') app.innerHTML = renderHome();
+  else if(currentPage==='calendar') app.innerHTML = renderCalendar();
+  else if(currentPage==='day'){
+    app.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:80vh;color:var(--tx3);font-size:14px">Loading…</div>';
+    await loadDayData(activeDayKey);
+    app.innerHTML = renderDay();
+    attachEvents();
+    return;
+  }
+  attachEvents();
+}
+
+// ── Home ──────────────────────────────────────────────────────────────
+function renderHome(){
+  const q = QUOTES[quoteIdx];
+  const now = new Date();
+  return `
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden">
+    <div class="orb" style="width:600px;height:600px;background:radial-gradient(circle,${isDark?'rgba(240,128,128,.07)':'rgba(240,128,128,.10)'} 0%,transparent 70%);top:-100px;right:-100px;animation:orb1 18s ease-in-out infinite"></div>
+    <div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,${isDark?'rgba(255,144,144,.05)':'rgba(255,160,160,.08)'} 0%,transparent 70%);bottom:-150px;left:-100px;animation:orb2 22s ease-in-out infinite"></div>
+    <div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,${isDark?'rgba(224,96,96,.05)':'rgba(208,104,104,.06)'} 0%,transparent 70%);top:40%;left:30%;animation:orb3 14s ease-in-out infinite"></div>
+  </div>
+  <div class="page">
+    <header class="topbar">
+      <a class="logo" href="/"><div class="logo-dot"></div>Ritmo</a>
+      <div class="topbar-r">
+        <button class="ibtn" onclick="setTheme()">${isDark?'☀️':'🌙'}</button>
+        <div class="profile-wrap" onclick="toggleProfile(event)">
+          <button class="profile-btn">${escH(USERNAME.charAt(0).toUpperCase())}</button>
+          <div class="profile-drop" id="profile-drop">
+            <div class="profile-name">${escH(USERNAME)}</div>
+            <a href="/logout/" class="profile-logout">Sign out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="hero">
+      <div class="hero-logo-wrap"><div class="hero-logo"><span class="hero-r">R</span></div></div>
+      <h1 class="hero-h1" style="animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) both">Your Daily <em>Rhythm</em></h1>
+      <p class="hero-sub" style="animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) .12s both">Build beautiful routines. Track every moment. Celebrate every win.</p>
+      <div class="quote-card" style="animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) .22s both">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">${q.text}</div>
+        <div class="quote-author">— ${q.author}</div>
+      </div>
+      <div class="hero-btns" style="animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) .32s both">
+        <button class="hero-btn-p" onclick="navigate('calendar')">📅 Open Calendar</button>
+        <button class="hero-btn-s" onclick="navigate('day','${todayKey}')">✦ Today's Rhythm</button>
+      </div>
+      <div class="stat-strip">
+        ${[
+          {icon:'🗓',label:'Today',val:now.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})},
+          {icon:'🌅',label:'Month',val:`${MONTHS[now.getMonth()]} ${now.getFullYear()}`},
+          {icon:'⏰',label:'Time',val:now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})},
+        ].map((s,i)=>`<div class="stat-card" style="animation-delay:${.45+i*.1}s">
+          <span style="font-size:20px">${s.icon}</span>
+          <div><div style="font-size:10px;font-weight:500;color:var(--tx3);letter-spacing:1px;text-transform:uppercase">${s.label}</div>
+          <div style="font-size:14px;font-weight:500;color:var(--tx)">${s.val}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Calendar ──────────────────────────────────────────────────────────
+function renderCalendar(){
+  const firstDay = new Date(viewYear,viewMonth,1).getDay();
+  const daysInMonth = new Date(viewYear,viewMonth+1,0).getDate();
+  const daysInPrev = new Date(viewYear,viewMonth,0).getDate();
+  const cells = [];
+  for(let i=0;i<firstDay;i++) cells.push({type:'prev',day:daysInPrev-firstDay+1+i});
+  for(let d=1;d<=daysInMonth;d++) cells.push({type:'cur',day:d});
+  const rem = 42-cells.length;
+  for(let d=1;d<=rem;d++) cells.push({type:'next',day:d});
+
+  const cellsHtml = cells.map((cell,i)=>{
+    if(cell.type!=='cur') return `<div class="cal-cell other" style="animation-delay:${i*.012}s"><span style="font-size:13px;color:var(--tx3);opacity:.35">${cell.day}</span></div>`;
+    const key = fmtKey(viewYear,viewMonth+1,cell.day);
+    const isT = key===todayKey;
+    const d = dayData[key];
+    let prog = null;
+    if(d){const all=Object.values(d.sched||{}).flat();if(all.length)prog=Math.round((all.filter(e=>e.done).length/all.length)*100);}
+    return `<div class="cal-cell${isT?' today':''}" style="animation-delay:${i*.012}s" onclick="navigate('day','${key}')">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <span class="day-num">${cell.day}</span>
+        ${isT?'<span class="today-tag">Today</span>':''}
+      </div>
+      ${prog!==null?`<div><div class="prog-mini"><div class="prog-fill-mini" style="width:${prog}%"></div></div><span style="font-size:10px;color:var(--tx3)">${prog}%</span></div>`:''}
+    </div>`;
+  }).join('');
+
+  return `<div class="page">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="ibtn" onclick="navigate('home')" style="font-size:18px">←</button>
+        <a class="logo" href="/"><div class="logo-dot"></div>Ritmo</a>
+      </div>
+      <div class="topbar-r">
+        <button class="pill-btn" onclick="navigate('day','${todayKey}')">✦ Today</button>
+        <button class="ibtn" onclick="setTheme()">${isDark?'☀️':'🌙'}</button>
+        <div class="profile-wrap" onclick="toggleProfile(event)">
+          <button class="profile-btn">${escH(USERNAME.charAt(0).toUpperCase())}</button>
+          <div class="profile-drop" id="profile-drop">
+            <div class="profile-name">${escH(USERNAME)}</div>
+            <a href="/logout/" class="profile-logout">Sign out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="cal-page">
+      <div class="month-nav">
+        <button class="ibtn" style="width:42px;height:42px;font-size:20px" onclick="prevMonth()">‹</button>
+        <div style="text-align:center">
+          <div class="month-title"><em>${MONTHS[viewMonth]}</em></div>
+          <div class="nav-yr">${viewYear}</div>
+        </div>
+        <button class="ibtn" style="width:42px;height:42px;font-size:20px" onclick="nextMonth()">›</button>
+      </div>
+      <div class="day-headers">${DAYS.map(d=>`<div class="dh">${d}</div>`).join('')}</div>
+      <div class="cal-grid">${cellsHtml}</div>
+      <div style="margin-top:28px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+        ${[['Today','Coral top bar'],['Progress bar','Tasks scheduled'],['Click any date','Open day planner']].map(([k,v])=>`
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx3)">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--coral);opacity:.6"></div>
+            <span style="color:var(--tx2);font-weight:500">${k}</span> — ${v}
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Day ───────────────────────────────────────────────────────────────
+function renderDay(){
+  const [y,m,d] = activeDayKey.split('-');
+  const dt = new Date(+y,+m-1,+d);
+  const isToday = activeDayKey===todayKey;
+  const dayDisp = dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const dd = dayData[activeDayKey];
+  if(!dd) return '<div style="text-align:center;padding:40px;color:var(--tx3)">Loading…</div>';
+
+  const allTasks = [...globalTasks];
+  const allSched = Object.values(dd.sched).flat();
+  const total = allSched.length, done = allSched.filter(e=>e.done).length;
+  const pct = total?Math.round((done/total)*100):0;
+
+  function isScheduled(id){return Object.values(dd.sched).some(a=>a.some(e=>e.taskId===id));}
+  const unscheduled = allTasks.filter(t=>!isScheduled(t.id));
+
+  const sidebarHtml = unscheduled.length===0
+    ?'<div class="empty-note"><div style="font-size:28px;margin-bottom:8px">🌸</div>All tasks on calendar!</div>'
+    :unscheduled.map((t,i)=>`
+      <div class="tc" draggable="true" data-drag-task="${t.id}" style="--tc-clr:${t.tag.color};animation-delay:${i*.05}s">
+        <div class="tc-name">${escH(t.name)}</div>
+        <div class="tc-row">
+          <div class="tc-tag" style="background:${isDark?t.tag.dbg:t.tag.bg};color:${t.tag.color}">${t.tag.label}</div>
+          <button class="ta-del" onclick="delTask('${t.id}')">✕</button>
+        </div>
+      </div>`).join('');
+
+  const schedHtml = dd.times.map((time,i)=>{
+    const slotChips = (dd.sched[i]||[]).map(entry=>{
+      const t = allTasks.find(x=>x.id===entry.taskId);
+      if(!t) return '';
+      return `<div class="chip${entry.done?' done':''}" draggable="true" data-drag-task="${t.id}" data-drag-from="${i}" style="background:${isDark?t.tag.dbg:t.tag.bg};color:${t.tag.color};border-color:${isDark?'rgba(255,255,255,.07)':'rgba(0,0,0,.07)'}">
+        <div class="cdot" style="background:${t.tag.color}"></div>
+        <span class="clbl">${escH(t.name)}</span>
+        <div class="cchk" onclick="toggleDone('${t.id}',${i})" style="color:${t.tag.color}">${entry.done?'✓':''}</div>
+        <button class="crm" onclick="removeSlot('${t.id}',${i})">✕</button>
+      </div>`;
+    }).join('');
+
+    const timeCell = editMode
+      ?`<input class="t-inp" value="${escH(time)}" onblur="updateTimeLabel(${i},this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="del-slot" onclick="deleteSlot(${i})" title="Delete slot">✕</button>`
+      :`<span class="tlabel">${escH(time)}</span>`;
+
+    return `<div class="grid-row">
+      <div class="tslot">${timeCell}</div>
+      <div class="dz" data-slot="${i}" ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this,${i})">${slotChips}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="page">
+  <div class="shell">
+    <header class="topbar" style="grid-column:1/-1">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="ibtn" onclick="navigate('calendar')" style="font-size:18px">←</button>
+        <a class="logo" href="/"><div class="logo-dot"></div>Ritmo</a>
+      </div>
+      <div class="topbar-r">
+        <button class="ibtn" style="font-size:13px;width:auto;padding:0 14px" onclick="showTimeModal()">＋ Time</button>
+        <button class="add-btn" onclick="showTaskModal()"><span style="font-size:18px;font-weight:300;line-height:1">+</span> New Task</button>
+        <button class="ibtn" onclick="setTheme()">${isDark?'☀️':'🌙'}</button>
+        <div class="profile-wrap" onclick="toggleProfile(event)">
+          <button class="profile-btn">${escH(USERNAME.charAt(0).toUpperCase())}</button>
+          <div class="profile-drop" id="profile-drop">
+            <div class="profile-name">${escH(USERNAME)}</div>
+            <a href="/logout/" class="profile-logout">Sign out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside class="sidebar">
+      <div class="s-label">Task Pool <span class="count-pill">${unscheduled.length}</span></div>
+      ${sidebarHtml}
+    </aside>
+    <main class="main">
+      <div class="cal-hdr">
+        <div>
+          <div class="cal-title">${isToday?`Today's <em>Rhythm</em>`:`<em>Day Plan</em>`}</div>
+          <div style="font-size:12px;color:var(--tx2);margin-top:4px">${dayDisp}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${isToday?'<span style="font-size:14px;font-weight:500;color:var(--coral);background:var(--coral-l);padding:4px 12px;border-radius:20px">Today</span>':''}
+          <button style="font-size:17px;font-weight:500;color:${editMode?'#4E9A72':'var(--coral)'};background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:inherit;transition:background .14s" onmouseover="this.style.background='var(--coral-l)'" onmouseout="this.style.background='none'" onclick="toggleEditMode()">${editMode?'✓ Done':'✎ Edit Times'}</button>
+          ${editMode?`<button style="font-size:17px;font-weight:500;color:#FF5C5C;background:none;border:1px solid var(--brd2);cursor:pointer;padding:4px 10px;border-radius:6px;font-family:inherit;transition:all .14s" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='none'" onclick="cancelEdit()">✕ Cancel</button>`:''}
+        </div>
+      </div>
+      <div class="progress-bar">
+        <span style="font-size:12px;color:var(--tx2);white-space:nowrap">Day progress</span>
+        <div class="pt"><div class="pf" id="pf" style="width:${pct}%"></div></div>
+        <span style="font-size:12px;font-weight:500;color:var(--coral-d);min-width:32px;text-align:right" id="pp">${pct}%</span>
+      </div>
+      <div class="cgrid">
+        <div class="grid-hdr">
+          <div class="thdr">TIME</div>
+          <div class="shdr">Schedule${isToday?'<span style="font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--coral-l);color:var(--coral)">Today</span>':''}</div>
+        </div>
+        ${schedHtml}
+      </div>
+      <button class="add-slot-btn" onclick="showTimeModal()">+ Add Time Slot</button>
+    </main>
+  </div>
+  </div>`;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function attachEvents(){
+  document.querySelectorAll('[data-drag-task]').forEach(el=>{
+    el.addEventListener('dragstart',e=>{
+      dragId=el.dataset.dragTask;
+      dragFrom=el.dataset.dragFrom!==undefined&&el.dataset.dragFrom!==''?parseInt(el.dataset.dragFrom):null;
+      e.dataTransfer.effectAllowed='move';
+    });
+    el.addEventListener('dragend',()=>{dragId=null;dragFrom=null;});
+  });
+}
+
+function dzOver(e,el){e.preventDefault();el.classList.add('over');}
+function dzLeave(el){el.classList.remove('over');}
+async function dzDrop(e,el,slotIdx){
+  e.preventDefault();el.classList.remove('over');
+  if(!dragId) return;
+  const dd = dayData[activeDayKey];
+  if(dragFrom!==null){dd.sched[dragFrom]=(dd.sched[dragFrom]||[]).filter(x=>x.taskId!==dragId);}
+  if(!dd.sched[slotIdx]) dd.sched[slotIdx]=[];
+  if(!dd.sched[slotIdx].some(x=>x.taskId===dragId)){dd.sched[slotIdx].push({taskId:dragId,done:false});}
+  await saveDayData(activeDayKey);
+  render();
+}
+
+async function toggleDone(taskId,si){
+  const dd = dayData[activeDayKey];
+  const entry = (dd.sched[si]||[]).find(e=>e.taskId===taskId);
+  if(!entry) return;
+  entry.done = !entry.done;
+  await saveDayData(activeDayKey);
+  const all = Object.values(dd.sched).flat();
+  const fired = celFired[activeDayKey];
+  if(all.length>0&&all.every(e=>e.done)&&!fired){
+    celFired[activeDayKey]=true;
+    setTimeout(()=>{showCelebrate();launchConfetti();},400);
+  }
+  if(!all.every(e=>e.done)) celFired[activeDayKey]=false;
+  const total=all.length,done=all.filter(e=>e.done).length;
+  const pct=total?Math.round((done/total)*100):0;
+  const pf=document.getElementById('pf');const pp=document.getElementById('pp');
+  if(pf) pf.style.width=pct+'%';if(pp) pp.textContent=pct+'%';
+  render();
+}
+
+async function removeSlot(taskId,si){
+  const dd = dayData[activeDayKey];
+  dd.sched[si]=(dd.sched[si]||[]).filter(e=>e.taskId!==taskId);
+  await saveDayData(activeDayKey);
+  render();
+}
+
+async function delTask(id){
+  globalTasks = globalTasks.filter(t=>t.id!==id);
+  await apiFetch(`/api/tasks/${id}/`, 'DELETE');
+  const dd = dayData[activeDayKey];
+  if(dd) Object.keys(dd.sched).forEach(k=>{dd.sched[k]=(dd.sched[k]||[]).filter(e=>e.taskId!==id);});
+  if(activeDayKey) await saveDayData(activeDayKey);
+  render();
+}
+
+async function updateTimeLabel(idx,val){
+  const dd = dayData[activeDayKey];
+  if(val.trim()) dd.times[idx]=val.trim();
+  await saveDayData(activeDayKey);
+  render();
+}
+
+async function deleteSlot(idx){
+  const dd = dayData[activeDayKey];
+  dd.times.splice(idx,1);
+  const newSched={};
+  dd.times.forEach((_,i)=>{newSched[i]=dd.sched[i<idx?i:i+1]||[];});
+  dd.sched=newSched;
+  await saveDayData(activeDayKey);
+  render();
+}
+
+function prevMonth(){if(viewMonth===0){viewMonth=11;viewYear--;}else viewMonth--;render();}
+function nextMonth(){if(viewMonth===11){viewMonth=0;viewYear++;}else viewMonth++;render();}
+
+// ── Modals ────────────────────────────────────────────────────────────
+function showTaskModal(){
+  const ov=document.createElement('div');ov.className='overlay';
+  const tagOpts=TAGS.map(t=>`<div class="tag-opt${t.id===tagSel?' sel':''}" style="background:${isDark?t.dbg:t.bg};color:${t.color};border-color:${t.id===tagSel?t.color:'transparent'}" onclick="selTag('${t.id}',this)" data-tagid="${t.id}">${t.label}</div>`).join('');
+  ov.innerHTML=`<div class="modal">
+    <div class="m-title">New Task ✦</div>
+    <div class="field"><label>Task Name</label><input id="task-inp" placeholder="Morning yoga, Deep work…" maxlength="42" autocomplete="off"></div>
+    <div class="field"><label>Tag</label><div class="tag-grid">${tagOpts}</div></div>
+    <div class="m-actions">
+      <button class="btn-c" onclick="closeModal()">Cancel</button>
+      <button class="btn-p" onclick="createTask()">Add Task →</button>
+    </div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+  document.body.appendChild(ov);
+  setTimeout(()=>document.getElementById('task-inp')?.focus(),200);
+  document.addEventListener('keydown',modalKH);
+}
+
+function selTag(id,el){
+  tagSel=id;
+  document.querySelectorAll('.tag-opt').forEach(opt=>{
+    const t=TAGS.find(x=>x.id===opt.dataset.tagid);if(!t)return;
+    opt.style.borderColor=opt.dataset.tagid===id?t.color:'transparent';
+    opt.classList.toggle('sel',opt.dataset.tagid===id);
+  });
+}
+
+async function createTask(){
+  const inp=document.getElementById('task-inp');
+  const name=(inp?.value||'').trim();
+  if(!name){inp?.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(-4px)'},{transform:'translateX(0)'}],{duration:300});return;}
+  const tag=TAGS.find(t=>t.id===tagSel)||TAGS[0];
+  const task = {id:'t'+Date.now(), name, tag};
+  globalTasks.push(task);
+  await apiFetch('/api/tasks/', 'POST', {id:task.id, name:task.name, tag_id:task.tag.id});
+  closeModal();
+  render();
+}
+
+function showTimeModal(){
+  const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="modal" style="width:360px">
+    <div class="m-title">Add Time Slot</div>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:18px">Enter a label like "11:30 AM" or "After Lunch"</p>
+    <div class="field"><input id="time-inp" placeholder="e.g. 11:30 AM" autocomplete="off"></div>
+    <div class="m-actions">
+      <button class="btn-c" onclick="closeModal()">Cancel</button>
+      <button class="btn-p" onclick="addTimeSlot()">Add Slot →</button>
+    </div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+  document.body.appendChild(ov);
+  setTimeout(()=>document.getElementById('time-inp')?.focus(),200);
+  document.addEventListener('keydown',timeKH);
+}
+
+async function addTimeSlot(){
+  const v=(document.getElementById('time-inp')?.value||'').trim();if(!v)return;
+  const dd=dayData[activeDayKey];
+  dd.times.push(v);dd.sched[dd.times.length-1]=[];
+  await saveDayData(activeDayKey);
+  closeModal();render();
+}
+
+function closeModal(){
+  document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  document.removeEventListener('keydown',modalKH);
+  document.removeEventListener('keydown',timeKH);
+}
+function modalKH(e){if(e.key==='Escape')closeModal();if(e.key==='Enter'&&document.getElementById('task-inp'))createTask();}
+function timeKH(e){if(e.key==='Escape')closeModal();if(e.key==='Enter'&&document.getElementById('time-inp'))addTimeSlot();}
+
+// ── Celebrate ─────────────────────────────────────────────────────────
+function showCelebrate(){
+  const ban=document.createElement('div');ban.className='cel-banner';ban.id='cel-banner';
+  ban.innerHTML=`<span class="cel-em">🎀</span>
+    <div class="cel-t">Day Complete!</div>
+    <div class="cel-s">Every single task done — you're amazing ✨</div>
+    <button class="btn-p" style="min-width:160px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:6px;line-height:1" onclick="hideCelebrate()"><span>Yay!</span><span>🌸</span></button>`;
+  document.body.appendChild(ban);
+  setTimeout(hideCelebrate,8000);
+}
+
+function hideCelebrate(){const b=document.getElementById('cel-banner');if(b)b.remove();}
+
+function launchConfetti(){
+  const cvs=document.getElementById('confetti-cvs');
+  cvs.style.display='block';
+  const ctx=cvs.getContext('2d');
+  cvs.width=window.innerWidth;cvs.height=window.innerHeight;
+  const COLS=['#f08080','#ffa0a0','#ffb5b5','#e06060','#ff9090','#d06868','#ffd0d0','#e87878','#ffc0c0','#c85858'];
+  const parts=Array.from({length:300},()=>({
+    x:Math.random()*cvs.width,y:-20-Math.random()*300,
+    vx:(Math.random()-.5)*2,vy:0.3+Math.random()*1.2,
+    rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.13,
+    sz:4+Math.random()*12,col:COLS[Math.floor(Math.random()*COLS.length)],
+    sh:Math.floor(Math.random()*4),alpha:1
+  }));
+  let fr=0;
+  function draw(){
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    parts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.018;p.vx*=0.998;p.rot+=p.rv;
+      if(p.y>cvs.height*.75)p.alpha-=0.001;
+      if(p.alpha<=0)return;
+      ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;
+      if(p.sh===0){ctx.beginPath();ctx.arc(0,0,p.sz/2,0,Math.PI*2);ctx.fill();}
+      else if(p.sh===1){ctx.fillRect(-p.sz/2,-p.sz/4,p.sz,p.sz/2);}
+      else if(p.sh===2){ctx.beginPath();ctx.moveTo(0,-p.sz/2);ctx.lineTo(p.sz/2,p.sz/2);ctx.lineTo(-p.sz/2,p.sz/2);ctx.closePath();ctx.fill();}
+      else{ctx.beginPath();for(let k=0;k<5;k++){const a1=(k*4*Math.PI/5)-Math.PI/2,a2=((k*4+2)*Math.PI/5)-Math.PI/2;if(k===0)ctx.moveTo(Math.cos(a1)*p.sz/2,Math.sin(a1)*p.sz/2);else ctx.lineTo(Math.cos(a1)*p.sz/2,Math.sin(a1)*p.sz/2);ctx.lineTo(Math.cos(a2)*p.sz/4,Math.sin(a2)*p.sz/4);}ctx.closePath();ctx.fill();}
+      ctx.restore();
+    });
+    fr++;
+    if(fr<1800&&parts.some(p=>p.alpha>0))requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,cvs.width,cvs.height);cvs.style.display='none';}
+  }
+  draw();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+async function init(){
+  await loadTasks();
+  // If starting on day page, preload day data
+  if(currentPage==='day' && activeDayKey){
+    await loadDayData(activeDayKey);
+  }
+  // Preload calendar data for current month (progress bars)
+  if(currentPage==='calendar'){
+    const now = new Date();
+    const daysInMonth = new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+    const promises = [];
+    for(let d=1;d<=daysInMonth;d++){
+      const key = fmtKey(now.getFullYear(),now.getMonth()+1,d);
+      promises.push(loadDayData(key));
+    }
+    await Promise.all(promises);
+  }
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('app') || document.body.insertAdjacentHTML('afterbegin','<div id="app"></div>');
+  init();
+});
+
+function toggleProfile(e){
+  e.stopPropagation();
+  const d = document.getElementById('profile-drop');
+  if(d) d.classList.toggle('open');
+}
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.profile-drop.open').forEach(d=>d.classList.remove('open'));
+});
+
+let savedTimes = null;
+let savedSched = null;
+
+function toggleEditMode(){
+  if(!editMode){
+    // entering edit — save a snapshot
+    const dd = dayData[activeDayKey];
+    savedTimes = JSON.parse(JSON.stringify(dd.times));
+    savedSched = JSON.parse(JSON.stringify(dd.sched));
+  }
+  editMode = !editMode;
+  render();
+}
+
+async function cancelEdit(){
+  const dd = dayData[activeDayKey];
+  if(savedTimes) dd.times = savedTimes;
+  if(savedSched) dd.sched = savedSched;
+  savedTimes = null;
+  savedSched = null;
+  editMode = false;
+  await saveDayData(activeDayKey);
+  render();
+}
+</script>
+
+<div id="app"></div>
+</body>
+</html>

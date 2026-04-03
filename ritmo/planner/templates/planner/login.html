@@ -1,0 +1,78 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritmo — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/apple-touch-icon.png' %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/favicon-32x32.png' %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/favicon-16x16.png' %}">
+<link rel="manifest" href="{% static 'icon/site.webmanifest' %}">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --coral:#f08080;--coral-d:#e06060;--coral-l:rgba(240,128,128,0.12);--coral-b:rgba(240,128,128,0.22);
+  --coral-2:#ff9090;--coral-3:#e87878;--coral-4:#ffa0a0;--coral-5:#d06868;
+  --bg:#120D0A;--bg2:#1C1410;--bg3:#261A14;
+  --surf:#1E1510;--surf2:#261A14;--brd:rgba(240,128,128,0.12);--brd2:rgba(240,128,128,0.22);
+  --tx:#F5EAE4;--tx2:#C09070;--tx3:#7A5040;--sh:rgba(0,0,0,0.4);
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.6}}
+@keyframes orb1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-40px)}}
+@keyframes orb2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,50px)}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;z-index:1}
+.card{background:var(--surf);border:1px solid var(--brd2);border-radius:28px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,0.5);animation:fadeUp .6s cubic-bezier(.34,1.56,.64,1)}
+.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:32px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:pulse 2.4s ease-in-out infinite}
+.logo-text{font-family:'Instrument Serif',serif;font-size:26px;color:var(--coral)}
+h1{font-family:'Instrument Serif',serif;font-size:28px;color:var(--tx);text-align:center;margin-bottom:6px}
+.sub{font-size:14px;color:var(--tx3);text-align:center;margin-bottom:28px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field label{font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.5px;text-transform:uppercase}
+.field input{height:46px;padding:0 16px;border-radius:12px;border:1px solid var(--brd2);background:var(--bg2);color:var(--tx);font-size:14px;outline:none;transition:border .18s,box-shadow .18s;font-family:'DM Sans',sans-serif}
+.field input:focus{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-l)}
+.btn{width:100%;height:48px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 6px 20px var(--coral-b);transition:all .25s cubic-bezier(.34,1.56,.64,1);font-family:'DM Sans',sans-serif;margin-top:8px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--coral-b)}
+.error{background:rgba(240,128,128,.12);border:1px solid rgba(240,128,128,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--coral-4);margin-bottom:16px;text-align:center}
+.link-row{text-align:center;margin-top:20px;font-size:13px;color:var(--tx3)}
+.link-row a{color:var(--coral-2);text-decoration:none;font-weight:500}
+.link-row a:hover{text-decoration:underline}
+.hero-icon{width:72px;height:72px;border-radius:20px;background:var(--coral-l);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;animation:float 5s ease-in-out infinite}
+.hero-r{font-family:'Instrument Serif',serif;font-size:36px;color:var(--coral)}
+</style>
+</head>
+<body>
+<div class="orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(240,128,128,.07) 0%,transparent 70%);top:-80px;right:-80px;animation:orb1 18s ease-in-out infinite"></div>
+<div class="orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(240,128,128,.05) 0%,transparent 70%);bottom:-100px;left:-80px;animation:orb2 22s ease-in-out infinite"></div>
+<div class="wrap">
+  <div class="card">
+    <div class="hero-icon"><span class="hero-r">R</span></div>
+    <div class="logo"><div class="logo-dot"></div><span class="logo-text">Ritmo</span></div>
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to your daily rhythm</p>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Your username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Your password" autocomplete="current-password" required>
+      </div>
+      <button class="btn" type="submit">Sign In →</button>
+    </form>
+    <div class="link-row">Don't have an account? <a href="{% url 'register' %}">Create one</a></div>
+  </div>
+</div>
+</body>
+</html>
